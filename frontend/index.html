@@ -208,17 +208,17 @@
     </div>
     <label class="form-label">Provider</label>
     <select class="select-input w100" id="llmProvider">
-      <option value="fallback">Offline (Fallback — no API key needed)</option>
+      <option value="ollama" selected>Ollama (Local)</option>
       <option value="groq">Groq (Fast & Free)</option>
       <option value="openai">OpenAI (GPT-3.5 / GPT-4)</option>
-      <option value="ollama">Ollama (Local)</option>
+      <option value="fallback">Offline (Fallback)</option>
     </select>
-    <label class="form-label mt">API Key</label>
+    <label class="form-label mt">API Key (optional for Ollama)</label>
     <input class="text-input" id="llmApiKey" placeholder="sk-... or gsk_..." type="password" />
     <label class="form-label mt">Model Name</label>
-    <input class="text-input" id="llmModel" placeholder="e.g. llama3-8b-8192, gpt-3.5-turbo" />
-    <label class="form-label mt" id="ollamaLabel" style="display:none">Ollama URL</label>
-    <input class="text-input" id="ollamaUrl" placeholder="http://localhost:11434" style="display:none" />
+    <input class="text-input" id="llmModel" value="qwen2.5:7b" placeholder="e.g. qwen2.5:7b, llama3" />
+    <label class="form-label mt" id="ollamaLabel">Ollama URL</label>
+    <input class="text-input" id="ollamaUrl" value="http://localhost:11434" placeholder="http://localhost:11434" />
     <button class="btn-primary w100 mt" onclick="saveSettings()">Save Settings</button>
     <div id="settingsStatus" class="upload-status"></div>
   </div>

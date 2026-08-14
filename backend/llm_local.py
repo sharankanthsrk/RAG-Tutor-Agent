@@ -1,9 +1,9 @@
 import os, requests
 
 # ----- Configuration (set via environment or /settings API) -----
-LLM_PROVIDER = os.getenv("LLM_PROVIDER", "fallback")   # "openai" | "groq" | "ollama" | "fallback"
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")   # "openai" | "groq" | "ollama" | "fallback"
 LLM_API_KEY  = os.getenv("LLM_API_KEY", "")
-LLM_MODEL    = os.getenv("LLM_MODEL", "llama3")
+LLM_MODEL    = os.getenv("LLM_MODEL", "qwen2.5:7b")
 OLLAMA_URL   = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 def update_settings(provider: str = None, api_key: str = None, model: str = None, ollama_url: str = None):
@@ -50,11 +50,15 @@ def _groq(prompt: str) -> str:
     return r.json()["choices"][0]["message"]["content"]
 
 def _ollama(prompt: str) -> str:
-    url = f"{OLLAMA_URL}/api/generate"
-    body = {"model": LLM_MODEL, "prompt": prompt, "stream": False}
+    model_name = LLM_MODEL or "qwen2.5:7b"
+    url = f"{OLLAMA_URL}/api/chat"
+    body = {"model": model_name, "messages": [{"role": "user", "content": prompt}], "stream": False}
     r = requests.post(url, json=body, timeout=60)
     r.raise_for_status()
-    return r.json().get("response", "")
+    data = r.json()
+    if "message" in data and "content" in data["message"]:
+        return data["message"]["content"]
+    return data.get("response", "")
 
 def _fallback(prompt: str) -> str:
     """
